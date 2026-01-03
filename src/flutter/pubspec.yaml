@@ -1,0 +1,131 @@
+name: vhv_enterprise_app
+description: Enterprise-grade mobile application with Material Design and VHV Widgets
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.8.0 <4.0.0'
+  flutter: '>=3.38.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # VHV Widgets Library
+  vhv_widgets:
+    git:
+      url: https://github.com/vhvplatform/flutter-vhv_widgets.git
+  
+  # Icons & Graphics
+  material_design_icons_flutter: ^7.0.7296
+  flutter_svg: ^2.0.10+1
+  cupertino_icons: ^1.0.8
+  
+  # Image & Caching
+  cached_network_image: ^3.4.1
+  
+  # UI Components & Animations
+  shimmer: ^3.0.0
+  lottie: ^3.1.2
+  animate_do: ^3.2.0
+  flutter_animate: ^4.4.0
+  
+  # State Management - BLoC
+  flutter_bloc: ^8.1.6
+  bloc: ^8.1.4
+  bloc_concurrency: ^0.2.5
+  equatable: ^2.0.5
+  hydrated_bloc: ^9.1.5
+  replay_bloc: ^0.2.7
+  
+  # State Management - Riverpod
+  flutter_riverpod: ^2.6.1
+  
+  # Navigation
+  go_router: ^14.2.7
+  
+  # Local Storage
+  shared_preferences: ^2.3.2
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  flutter_secure_storage: ^9.2.2
+  
+  # Networking
+  http: ^1.2.2
+  dio: ^5.7.0
+  connectivity_plus: ^6.1.0
+  
+  # Forms & Validation
+  flutter_form_builder: ^10.2.0
+  form_builder_validators: ^11.0.0
+  
+  # Internationalization
+  intl: ^0.20.2
+  flutter_localized_locales: ^2.0.0
+  
+  # Security & Authentication
+  local_auth: ^2.3.0
+  
+  # Device Info
+  device_info_plus: ^11.1.0
+  package_info_plus: ^8.1.0
+  
+  # Utilities
+  url_launcher: ^6.3.1
+  share_plus: ^10.1.2
+  path_provider: ^2.1.5
+  
+  # Media Pickers
+  image_picker: ^1.1.2
+  file_picker: ^8.1.4
+  permission_handler: ^11.3.1
+  
+  # Charts & Visualizations
+  fl_chart: ^0.69.0
+  
+  # QR Code
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^5.2.3
+  
+  # Calendar
+  table_calendar: ^3.1.2
+  
+  # Markdown
+  flutter_markdown: ^0.7.3+1
+  
+  # UI Interactions
+  pull_to_refresh: ^2.0.0
+  fluttertoast: ^8.2.4
+  awesome_dialog: ^3.2.0
+  modal_bottom_sheet: ^2.1.1
+  carousel_slider: ^5.0.0
+  
+  # PDF
+  pdf: ^3.11.0
+  printing: ^5.13.0
+  
+  # Firebase
+  firebase_core: ^2.24.2
+  firebase_messaging: ^14.7.9
+  firebase_analytics: ^10.8.0
+  
+  # Local Notifications
+  flutter_local_notifications: ^16.3.0
+  
+  # Logging
+  logger: ^2.4.0
+  
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  
+  assets:
+    - assets/icon/
+    - assets/splash/
+    - assets/images/
+    - assets/screenshots/

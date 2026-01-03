@@ -1,0 +1,19 @@
+# Keystore configuration for release builds
+# IMPORTANT: DO NOT commit this file to Git!
+# Add this file to .gitignore
+
+# Instructions:
+# 1. Generate keystore using: keytool -genkey -v -keystore ~/upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+# 2. Update the values below with your keystore details
+# 3. Keep this file secure and never commit to version control
+
+storePassword=YOUR_STORE_PASSWORD
+keyPassword=YOUR_KEY_PASSWORD
+keyAlias=upload
+storeFile=/path/to/your/upload-keystore.jks
+
+# Example (replace with your actual values):
+# storePassword=MyStrongPassword123!
+# keyPassword=MyStrongPassword123!
+# keyAlias=upload
+# storeFile=/Users/username/upload-keystore.jks

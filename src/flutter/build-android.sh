@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # VHV Enterprise App - Android Build Script
+# Kotlin 2.1.0 + Gradle Kotlin DSL
 # Usage: ./build-android.sh [build-type] [flavor]
 # Example: ./build-android.sh apk prod
 
@@ -26,6 +27,8 @@ echo -e "${BLUE}Configuration:${NC}"
 echo "  Build Type: $BUILD_TYPE"
 echo "  Flavor: $FLAVOR"
 echo "  Mode: $MODE"
+echo "  Kotlin: 2.1.0"
+echo "  Gradle: Kotlin DSL"
 echo ""
 
 # Validate inputs

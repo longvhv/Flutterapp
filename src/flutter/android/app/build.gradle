@@ -4,9 +4,14 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
-// Add at the bottom - Firebase
-apply plugin: 'com.google.gms.google-services'
+// Load keystore properties
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
 
+// Load local properties
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -25,16 +30,9 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0.0'
 }
 
-// Keystore configuration
-def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file('key.properties')
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-}
-
 android {
     namespace "com.vhvplatform.enterprise_app"
-    compileSdkVersion 34
+    compileSdk 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -57,8 +55,15 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
+        
+        // Vector drawable support
+        vectorDrawables.useSupportLibrary = true
+        
+        // Test instrumentation runner
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // Signing configurations
     signingConfigs {
         debug {
             storeFile file('debug.keystore')
@@ -79,55 +84,92 @@ android {
 
     buildTypes {
         debug {
-            signingConfig signingConfigs.debug
-            applicationIdSuffix ".debug"
             debuggable true
             minifyEnabled false
             shrinkResources false
+            signingConfig signingConfigs.debug
+            
+            // Debug build config fields
+            buildConfigField "String", "BUILD_TYPE", '"debug"'
+            buildConfigField "Boolean", "DEBUG_MODE", "true"
         }
 
         release {
-            signingConfig keystorePropertiesFile.exists() ? signingConfigs.release : signingConfigs.debug
+            debuggable false
             minifyEnabled true
             shrinkResources true
+            signingConfig signingConfigs.release
+            
+            // ProGuard files
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             
-            // Optimize APK size
-            ndk {
-                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
-            }
-        }
-
-        profile {
-            initWith debug
-            signingConfig signingConfigs.debug
-            applicationIdSuffix ".profile"
+            // Release build config fields
+            buildConfigField "String", "BUILD_TYPE", '"release"'
+            buildConfigField "Boolean", "DEBUG_MODE", "false"
+            
+            // Enable code optimization
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
+    // Build flavors
     flavorDimensions "environment"
+    
     productFlavors {
         dev {
             dimension "environment"
             applicationIdSuffix ".dev"
             versionNameSuffix "-dev"
+            
             resValue "string", "app_name", "VHV App (Dev)"
+            buildConfigField "String", "API_BASE_URL", '"https://dev-api.vhvplatform.com"'
+            buildConfigField "String", "ENVIRONMENT", '"development"'
         }
-
+        
         staging {
             dimension "environment"
             applicationIdSuffix ".staging"
             versionNameSuffix "-staging"
+            
             resValue "string", "app_name", "VHV App (Staging)"
+            buildConfigField "String", "API_BASE_URL", '"https://staging-api.vhvplatform.com"'
+            buildConfigField "String", "ENVIRONMENT", '"staging"'
         }
-
+        
         prod {
             dimension "environment"
+            
             resValue "string", "app_name", "VHV App"
+            buildConfigField "String", "API_BASE_URL", '"https://api.vhvplatform.com"'
+            buildConfigField "String", "ENVIRONMENT", '"production"'
         }
     }
 
-    // Split APKs per architecture
+    // Build features
+    buildFeatures {
+        buildConfig true
+        viewBinding false
+        dataBinding false
+    }
+
+    // Packaging options
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/*.kotlin_module'
+    }
+
+    // Lint options
+    lint {
+        checkReleaseBuilds false
+        abortOnError false
+        disable 'InvalidPackage'
+    }
+
+    // Split APKs by ABI for smaller download sizes
     splits {
         abi {
             enable true
@@ -136,11 +178,6 @@ android {
             universalApk true
         }
     }
-
-    lint {
-        disable 'InvalidPackage'
-        checkReleaseBuilds false
-    }
 }
 
 flutter {
@@ -148,5 +185,21 @@ flutter {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    
+    // AndroidX
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.11.0'
+    
+    // Multi-dex
+    implementation 'androidx.multidex:multidex:2.0.1'
+    
+    // Testing
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
+
+// Apply Google Services plugin (Firebase)
+apply plugin: 'com.google.gms.google-services'

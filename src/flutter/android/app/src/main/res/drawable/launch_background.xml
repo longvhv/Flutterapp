@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Background color -->
-    <item android:drawable="@color/splash_background" />
+    <!-- Background gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="135"
+                android:startColor="#3B82F6"
+                android:centerColor="#9333EA"
+                android:endColor="#EC4899"
+                android:type="linear" />
+        </shape>
+    </item>
     
-    <!-- Logo centered -->
+    <!-- Logo (optional - uncomment when you have a logo) -->
+    <!--
     <item>
         <bitmap
             android:gravity="center"
             android:src="@drawable/splash_logo" />
     </item>
+    -->
 </layer-list>

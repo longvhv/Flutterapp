@@ -1,5 +1,4 @@
 import React, { useRef, useEffect } from 'react';
-import { VHVScrollbar } from './VHVScrollbar';
 
 interface VHVListViewProps {
   children: React.ReactNode[];
@@ -64,18 +63,23 @@ export const VHVListView: React.FC<VHVListViewProps> = ({
     : items;
 
   return (
-    <VHVScrollbar className={`flex ${containerClass} ${className}`}>
-      <div style={paddingStyle} className="flex flex-col w-full">
-        {content.map((item, index) => (
-          <div
-            key={index}
-            style={itemExtent ? { height: `${itemExtent}px` } : undefined}
-          >
-            {item}
-          </div>
-        ))}
-      </div>
-    </VHVScrollbar>
+    <div 
+      ref={containerRef}
+      className={`flex ${containerClass} ${className}`}
+      style={paddingStyle}
+    >
+      {content.map((item, index) => (
+        <div
+          key={index}
+          style={itemExtent ? { 
+            height: direction === 'vertical' ? `${itemExtent}px` : undefined,
+            width: direction === 'horizontal' ? `${itemExtent}px` : undefined 
+          } : undefined}
+        >
+          {item}
+        </div>
+      ))}
+    </div>
   );
 };
 

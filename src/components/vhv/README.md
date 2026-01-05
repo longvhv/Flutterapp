@@ -2,7 +2,7 @@
 
 **Enterprise-grade React components mapped from Flutter VHV Widgets**
 
-**Total: 185 Components** ✅
+**Total: 158 Components** ✅ (100% mapped to vhv_widgets Flutter library)
 
 ---
 
@@ -10,23 +10,33 @@
 
 | Category | Count | Status |
 |----------|-------|--------|
-| Layout | 40 | ✅ |
-| Display | 37 | ✅ |
-| Inputs | 23 | ✅ |
-| Interaction | 12 | ✅ |
-| Feedback | 11 | ✅ |
-| Navigation | 9 | ✅ |
-| Utility | 9 | ✅ |
-| Buttons | 8 | ✅ |
-| Transition | 8 | 🆕 |
-| Animation | 6 | ✅ |
+| Layout | 27 | ✅ |
+| Input | 21 | ✅ |
+| Display | 15 | ✅ |
+| Feedback | 13 | ✅ |
+| Interaction | 8 | ✅ |
+| Transition | 8 | ✅ |
+| Navigation | 8 | ✅ |
+| Button | 7 | ✅ |
+| Utility | 7 | ✅ |
 | Advanced | 6 | ✅ |
-| Material | 4 | ✅ |
+| Animation | 5 | ✅ |
 | Cupertino | 4 | ✅ |
-| Form | 3 | ✅ |
-| Basic | 3 | ✅ |
+| Decorative | 4 | ✅ |
+| Material | 3 | ✅ |
 | Transform | 3 | ✅ |
-| **TOTAL** | **185** | **100%** |
+| Basic | 3 | ✅ |
+| Form | 2 | ✅ |
+| Builder | 2 | ✅ |
+| Async | 2 | ✅ |
+| Structure | 2 | ✅ |
+| Container | 1 | ✅ |
+| Theme | 1 | ✅ |
+| Other | 1 | ✅ |
+| **TOTAL** | **158** | **100%** |
+
+> **Note**: Removed 27 components that don't exist in vhv_widgets Flutter library.  
+> Use shadcn/ui or custom implementations for: Accordion, Breadcrumb, Calendar, Carousel, etc.
 
 ---
 

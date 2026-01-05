@@ -40,7 +40,6 @@ export type { VHVSpeedDialAction } from './VHVSpeedDial';
 export { VHVTextButton } from './VHVTextButton';
 export { VHVElevatedButton } from './VHVElevatedButton';
 export { VHVOutlinedButton } from './VHVOutlinedButton';
-export { VHVBackButton } from './VHVBackButton';
 
 // Display Components
 export { VHVCard } from './VHVCard';
@@ -113,11 +112,8 @@ export { VHVLinearProgressIndicator } from './VHVLinearProgressIndicator';
 export { VHVCircularProgressIndicator } from './VHVCircularProgressIndicator';
 export { VHVAlert } from './VHVAlert';
 export type { VHVAlertVariant, VHVAlertSeverity } from './VHVAlert';
-export { VHVBottomSheet } from './VHVBottomSheet';
 export { VHVMenu } from './VHVMenu';
 export type { VHVMenuItem } from './VHVMenu';
-export { VHVDropzone } from './VHVDropzone';
-export { VHVBanner } from './VHVBanner';
 
 // Interaction Components
 export { VHVGestureDetector } from './VHVGestureDetector';

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:vhv_widgets/vhv_widgets.dart';
 
-/// Language Page sử dụng VHV Widgets
+/// Language Page sử dụng Material Widgets
 class LanguagePageVHV extends StatefulWidget {
   const LanguagePageVHV({super.key});
 
@@ -66,10 +65,13 @@ class _LanguagePageVHVState extends State<LanguagePageVHV> {
 
   void _selectLanguage(String code) {
     setState(() => _selectedLanguage = code);
-    VHVToast.show(
-      context: context,
-      message: 'Language changed to ${_languages.firstWhere((l) => l.code == code).name}',
-      type: VHVToastType.success,
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Language changed to ${_languages.firstWhere((l) => l.code == code).name}'),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
     );
   }
 
@@ -96,7 +98,7 @@ class _LanguagePageVHVState extends State<LanguagePageVHV> {
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    VHVIconButton(
+                    IconButton(
                       icon: const Icon(Icons.arrow_back, color: Colors.white),
                       onPressed: () => context.pop(),
                     ),
@@ -104,7 +106,7 @@ class _LanguagePageVHVState extends State<LanguagePageVHV> {
                     const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        VHVText(
+                        Text(
                           'Language',
                           style: TextStyle(
                             color: Colors.white,
@@ -112,7 +114,7 @@ class _LanguagePageVHVState extends State<LanguagePageVHV> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        VHVText(
+                        Text(
                           'Choose your preferred language',
                           style: TextStyle(
                             color: Colors.white70,
@@ -142,9 +144,12 @@ class _LanguagePageVHVState extends State<LanguagePageVHV> {
                       // Search Bar
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: VHVTextField(
-                          prefixIcon: const Icon(Icons.search),
-                          label: 'Search languages',
+                        child: TextField(
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Icons.search),
+                            labelText: 'Search languages',
+                            border: OutlineInputBorder(),
+                          ),
                           onChanged: (value) {
                             // Implement search
                           },
@@ -154,73 +159,78 @@ class _LanguagePageVHVState extends State<LanguagePageVHV> {
 
                       // Languages List
                       Expanded(
-                        child: VHVListView(
+                        child: ListView.builder(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           itemCount: _languages.length,
                           itemBuilder: (context, index) {
                             final language = _languages[index];
                             final isSelected = _selectedLanguage == language.code;
 
-                            return VHVCard(
+                            return Card(
                               margin: const EdgeInsets.only(bottom: 12),
-                              padding: const EdgeInsets.all(16),
-                              backgroundColor: isSelected
+                              color: isSelected
                                   ? const Color(0xFF3B82F6).withOpacity(0.1)
                                   : Colors.white,
-                              onTap: () => _selectLanguage(language.code),
-                              child: Row(
-                                children: [
-                                  // Flag
-                                  VHVText(
-                                    language.flag,
-                                    style: const TextStyle(fontSize: 32),
-                                  ),
-                                  const SizedBox(width: 16),
+                              child: InkWell(
+                                onTap: () => _selectLanguage(language.code),
+                                borderRadius: BorderRadius.circular(12),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Row(
+                                    children: [
+                                      // Flag
+                                      Text(
+                                        language.flag,
+                                        style: const TextStyle(fontSize: 32),
+                                      ),
+                                      const SizedBox(width: 16),
 
-                                  // Language Info
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        VHVText(
-                                          language.name,
-                                          style: TextStyle(
-                                            fontWeight: isSelected
-                                                ? FontWeight.bold
-                                                : FontWeight.w500,
-                                            color: isSelected
-                                                ? const Color(0xFF3B82F6)
-                                                : Colors.black,
-                                          ),
+                                      // Language Info
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              language.name,
+                                              style: TextStyle(
+                                                fontWeight: isSelected
+                                                    ? FontWeight.bold
+                                                    : FontWeight.w500,
+                                                color: isSelected
+                                                    ? const Color(0xFF3B82F6)
+                                                    : Colors.black,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              language.nativeName,
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: isSelected
+                                                    ? const Color(0xFF3B82F6).withOpacity(0.7)
+                                                    : Colors.grey.shade600,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        const SizedBox(height: 4),
-                                        VHVText(
-                                          language.nativeName,
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: isSelected
-                                                ? const Color(0xFF3B82F6).withOpacity(0.7)
-                                                : Colors.grey.shade600,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                      ),
 
-                                  // Selected Indicator
-                                  if (isSelected)
-                                    const Icon(
-                                      Icons.check_circle,
-                                      color: Color(0xFF3B82F6),
-                                      size: 24,
-                                    )
-                                  else
-                                    Icon(
-                                      Icons.circle_outlined,
-                                      color: Colors.grey.shade300,
-                                      size: 24,
-                                    ),
-                                ],
+                                      // Selected Indicator
+                                      if (isSelected)
+                                        const Icon(
+                                          Icons.check_circle,
+                                          color: Color(0xFF3B82F6),
+                                          size: 24,
+                                        )
+                                      else
+                                        Icon(
+                                          Icons.circle_outlined,
+                                          color: Colors.grey.shade300,
+                                          size: 24,
+                                        ),
+                                    ],
+                                  ),
+                                ),
                               ),
                             );
                           },
@@ -230,22 +240,33 @@ class _LanguagePageVHVState extends State<LanguagePageVHV> {
                       // Apply Button
                       Padding(
                         padding: const EdgeInsets.all(16),
-                        child: VHVButton(
-                          onPressed: () {
-                            context.pop();
-                          },
+                        child: Container(
                           width: double.infinity,
                           height: 56,
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF10B981), Color(0xFF3B82F6)],
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF10B981), Color(0xFF3B82F6)],
+                            ),
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          borderRadius: BorderRadius.circular(12),
-                          child: const VHVText(
-                            'Apply Changes',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              context.pop();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: const Text(
+                              'Apply Changes',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:vhv_widgets/vhv_widgets.dart';
 
-/// Notifications Page sử dụng VHV Widgets
+/// Notifications Page sử dụng Material Widgets
 class NotificationsPageVHV extends StatefulWidget {
   const NotificationsPageVHV({super.key});
 
@@ -30,59 +29,68 @@ class _NotificationsPageVHVState extends State<NotificationsPageVHV>
   }
 
   Future<void> _loadNotifications() async {
-    await VHVLoadManager.show(
+    // Show loading
+    showDialog(
       context: context,
-      loadingText: 'Loading notifications...',
-      future: Future.delayed(const Duration(seconds: 1)),
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
     );
 
-    setState(() {
-      _allNotifications = [
-        NotificationItem(
-          id: '1',
-          title: 'Welcome to the app!',
-          message: 'Thank you for joining us. Explore all features.',
-          timestamp: DateTime.now().subtract(const Duration(minutes: 5)),
-          type: 'info',
-          isRead: false,
-        ),
-        NotificationItem(
-          id: '2',
-          title: 'Security Alert',
-          message: 'New login detected from Chrome on Windows',
-          timestamp: DateTime.now().subtract(const Duration(hours: 2)),
-          type: 'security',
-          isRead: false,
-        ),
-        NotificationItem(
-          id: '3',
-          title: 'Profile Updated',
-          message: 'Your profile information has been updated successfully',
-          timestamp: DateTime.now().subtract(const Duration(hours: 5)),
-          type: 'success',
-          isRead: true,
-        ),
-        NotificationItem(
-          id: '4',
-          title: 'New Feature Available',
-          message: 'Check out our new dark mode feature!',
-          timestamp: DateTime.now().subtract(const Duration(days: 1)),
-          type: 'update',
-          isRead: true,
-        ),
-        NotificationItem(
-          id: '5',
-          title: 'Password Changed',
-          message: 'Your password was changed successfully',
-          timestamp: DateTime.now().subtract(const Duration(days: 2)),
-          type: 'security',
-          isRead: true,
-        ),
-      ];
-      _unreadNotifications =
-          _allNotifications.where((n) => !n.isRead).toList();
-      _isLoading = false;
-    });
+    await Future.delayed(const Duration(seconds: 1));
+
+    if (mounted) {
+      Navigator.of(context).pop(); // Close loading
+
+      setState(() {
+        _allNotifications = [
+          NotificationItem(
+            id: '1',
+            title: 'Welcome to the app!',
+            message: 'Thank you for joining us. Explore all features.',
+            timestamp: DateTime.now().subtract(const Duration(minutes: 5)),
+            type: 'info',
+            isRead: false,
+          ),
+          NotificationItem(
+            id: '2',
+            title: 'Security Alert',
+            message: 'New login detected from Chrome on Windows',
+            timestamp: DateTime.now().subtract(const Duration(hours: 2)),
+            type: 'security',
+            isRead: false,
+          ),
+          NotificationItem(
+            id: '3',
+            title: 'Profile Updated',
+            message: 'Your profile information has been updated successfully',
+            timestamp: DateTime.now().subtract(const Duration(hours: 5)),
+            type: 'success',
+            isRead: true,
+          ),
+          NotificationItem(
+            id: '4',
+            title: 'New Feature Available',
+            message: 'Check out our new dark mode feature!',
+            timestamp: DateTime.now().subtract(const Duration(days: 1)),
+            type: 'update',
+            isRead: true,
+          ),
+          NotificationItem(
+            id: '5',
+            title: 'Password Changed',
+            message: 'Your password was changed successfully',
+            timestamp: DateTime.now().subtract(const Duration(days: 2)),
+            type: 'security',
+            isRead: true,
+          ),
+        ];
+        _unreadNotifications =
+            _allNotifications.where((n) => !n.isRead).toList();
+        _isLoading = false;
+      });
+    }
   }
 
   void _markAsRead(String id) {
@@ -103,20 +111,24 @@ class _NotificationsPageVHVState extends State<NotificationsPageVHV>
           .toList();
       _unreadNotifications = [];
     });
-    VHVToast.show(
-      context: context,
-      message: 'All notifications marked as read',
-      type: VHVToastType.success,
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('All notifications marked as read'),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return VHVScaffold(
+    return Scaffold(
       body: CustomScrollView(
         slivers: [
           // App Bar với Gradient
-          VHVSliverAppBar(
+          SliverAppBar(
             expandedHeight: 180,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
@@ -139,7 +151,7 @@ class _NotificationsPageVHVState extends State<NotificationsPageVHV>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        const VHVText(
+                        const Text(
                           'Notifications',
                           style: TextStyle(
                             color: Colors.white,
@@ -150,10 +162,10 @@ class _NotificationsPageVHVState extends State<NotificationsPageVHV>
                         const SizedBox(height: 8),
                         Row(
                           children: [
-                            VHVAvatar(
+                            CircleAvatar(
                               radius: 8,
                               backgroundColor: Colors.white,
-                              child: VHVText(
+                              child: Text(
                                 '${_unreadNotifications.length}',
                                 style: const TextStyle(
                                   fontSize: 10,
@@ -162,7 +174,7 @@ class _NotificationsPageVHVState extends State<NotificationsPageVHV>
                               ),
                             ),
                             const SizedBox(width: 8),
-                            VHVText(
+                            Text(
                               '${_unreadNotifications.length} unread',
                               style: const TextStyle(
                                 color: Colors.white70,
@@ -171,9 +183,9 @@ class _NotificationsPageVHVState extends State<NotificationsPageVHV>
                             ),
                             const Spacer(),
                             if (_unreadNotifications.isNotEmpty)
-                              VHVTextButton(
+                              TextButton(
                                 onPressed: _markAllAsRead,
-                                child: const VHVText(
+                                child: const Text(
                                   'Mark all as read',
                                   style: TextStyle(
                                     color: Colors.white,
@@ -195,11 +207,11 @@ class _NotificationsPageVHVState extends State<NotificationsPageVHV>
           SliverPersistentHeader(
             pinned: true,
             delegate: _SliverTabBarDelegate(
-              VHVTabBar(
+              TabBar(
                 controller: _tabController,
                 tabs: const [
-                  VHVTab(text: 'All'),
-                  VHVTab(text: 'Unread'),
+                  Tab(text: 'All'),
+                  Tab(text: 'Unread'),
                 ],
               ),
             ),
@@ -208,16 +220,18 @@ class _NotificationsPageVHVState extends State<NotificationsPageVHV>
           // Notifications List
           SliverFillRemaining(
             child: _isLoading
-                ? VHVShimmer(
-                    child: Column(
-                      children: List.generate(
-                        5,
-                        (index) => VHVShimmerItem(
-                          height: 100,
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
+                ? Column(
+                    children: List.generate(
+                      5,
+                      (index) => Container(
+                        height: 100,
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
                     ),
@@ -241,7 +255,7 @@ class _NotificationsPageVHVState extends State<NotificationsPageVHV>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            VHVAvatar(
+            CircleAvatar(
               radius: 48,
               backgroundColor: Colors.grey.shade100,
               child: Icon(
@@ -251,7 +265,7 @@ class _NotificationsPageVHVState extends State<NotificationsPageVHV>
               ),
             ),
             const SizedBox(height: 16),
-            VHVText(
+            Text(
               'No notifications',
               style: TextStyle(
                 fontSize: 18,
@@ -263,74 +277,79 @@ class _NotificationsPageVHVState extends State<NotificationsPageVHV>
       );
     }
 
-    return VHVListView(
+    return ListView.builder(
       padding: const EdgeInsets.all(16),
       itemCount: notifications.length,
       itemBuilder: (context, index) {
         final notification = notifications[index];
-        return VHVCard(
+        return Card(
           margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(16),
-          backgroundColor: notification.isRead
+          color: notification.isRead
               ? Colors.white
               : Colors.blue.shade50,
-          onTap: () => _markAsRead(notification.id),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              VHVAvatar(
-                radius: 24,
-                backgroundColor: _getNotificationColor(notification.type),
-                child: Icon(
-                  _getNotificationIcon(notification.type),
-                  color: Colors.white,
-                  size: 24,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+          child: InkWell(
+            onTap: () => _markAsRead(notification.id),
+            borderRadius: BorderRadius.circular(12),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: 24,
+                    backgroundColor: _getNotificationColor(notification.type),
+                    child: Icon(
+                      _getNotificationIcon(notification.type),
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: VHVText(
-                            notification.title,
-                            style: TextStyle(
-                              fontWeight: notification.isRead
-                                  ? FontWeight.w500
-                                  : FontWeight.bold,
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                notification.title,
+                                style: TextStyle(
+                                  fontWeight: notification.isRead
+                                      ? FontWeight.w500
+                                      : FontWeight.bold,
+                                ),
+                              ),
                             ),
+                            if (!notification.isRead)
+                              const CircleAvatar(
+                                radius: 4,
+                                backgroundColor: Color(0xFF3B82F6),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          notification.message,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade700,
                           ),
                         ),
-                        if (!notification.isRead)
-                          VHVAvatar(
-                            radius: 4,
-                            backgroundColor: const Color(0xFF3B82F6),
+                        const SizedBox(height: 8),
+                        Text(
+                          _formatTime(notification.timestamp),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade500,
                           ),
+                        ),
                       ],
                     ),
-                    const SizedBox(height: 4),
-                    VHVText(
-                      notification.message,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey.shade700,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    VHVText(
-                      _formatTime(notification.timestamp),
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade500,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         );
       },
@@ -376,7 +395,7 @@ class _NotificationsPageVHVState extends State<NotificationsPageVHV>
 
 // Sliver Tab Bar Delegate
 class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
-  final VHVTabBar tabBar;
+  final TabBar tabBar;
 
   _SliverTabBarDelegate(this.tabBar);
 

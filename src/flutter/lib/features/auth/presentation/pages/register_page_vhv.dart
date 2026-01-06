@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:vhv_widgets/vhv_widgets.dart';
 
 import '../bloc/auth_bloc.dart';
 
-/// Register Page sử dụng VHV Widgets
+/// Register Page sử dụng Material Widgets
 class RegisterPageVHV extends StatefulWidget {
   const RegisterPageVHV({super.key});
 
@@ -32,13 +31,20 @@ class _RegisterPageVHVState extends State<RegisterPageVHV> {
     super.dispose();
   }
 
+  void _showSnackBar(String message, {bool isError = false, bool isWarning = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError ? Colors.red : (isWarning ? Colors.orange : Colors.green),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+  }
+
   void _handleRegister() {
     if (!_acceptTerms) {
-      VHVToast.show(
-        context: context,
-        message: 'Please accept terms and conditions',
-        type: VHVToastType.warning,
-      );
+      _showSnackBar('Please accept terms and conditions', isWarning: true);
       return;
     }
 
@@ -59,18 +65,10 @@ class _RegisterPageVHVState extends State<RegisterPageVHV> {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthAuthenticated) {
-            VHVToast.show(
-              context: context,
-              message: 'Account created successfully!',
-              type: VHVToastType.success,
-            );
+            _showSnackBar('Account created successfully!');
             context.go('/home');
           } else if (state is AuthError) {
-            VHVToast.show(
-              context: context,
-              message: state.message,
-              type: VHVToastType.error,
-            );
+            _showSnackBar(state.message, isError: true);
           }
         },
         child: Container(
@@ -95,7 +93,7 @@ class _RegisterPageVHVState extends State<RegisterPageVHV> {
                     // Back Button
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: VHVIconButton(
+                      child: IconButton(
                         icon: const Icon(Icons.arrow_back, color: Colors.white),
                         onPressed: () => context.pop(),
                       ),
@@ -103,7 +101,8 @@ class _RegisterPageVHVState extends State<RegisterPageVHV> {
                     const SizedBox(height: 16),
 
                     // Logo
-                    VHVAnimatedContainer(
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
                       width: 80,
                       height: 80,
                       decoration: BoxDecoration(
@@ -133,7 +132,7 @@ class _RegisterPageVHVState extends State<RegisterPageVHV> {
                     const SizedBox(height: 24),
 
                     // Title
-                    const VHVText(
+                    const Text(
                       'Create Account',
                       style: TextStyle(
                         fontSize: 32,
@@ -142,7 +141,7 @@ class _RegisterPageVHVState extends State<RegisterPageVHV> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const VHVText(
+                    const Text(
                       'Sign up to get started',
                       style: TextStyle(
                         fontSize: 16,
@@ -152,163 +151,204 @@ class _RegisterPageVHVState extends State<RegisterPageVHV> {
                     const SizedBox(height: 40),
 
                     // Form Card
-                    VHVCard(
-                      padding: const EdgeInsets.all(24),
-                      borderRadius: BorderRadius.circular(24),
+                    Card(
                       elevation: 30,
-                      child: VHVForm(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            // Full Name
-                            VHVTextField(
-                              controller: _fullNameController,
-                              label: 'Full Name',
-                              prefixIcon: const Icon(Icons.person_outlined),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your full name';
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 16),
-
-                            // Email
-                            VHVTextField(
-                              controller: _emailController,
-                              keyboardType: TextInputType.emailAddress,
-                              label: 'Email',
-                              prefixIcon: const Icon(Icons.email_outlined),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your email';
-                                }
-                                if (!value.contains('@')) {
-                                  return 'Please enter a valid email';
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 16),
-
-                            // Password
-                            VHVTextField(
-                              controller: _passwordController,
-                              obscureText: _obscurePassword,
-                              label: 'Password',
-                              prefixIcon: const Icon(Icons.lock_outlined),
-                              suffixIcon: VHVIconButton(
-                                icon: Icon(
-                                  _obscurePassword
-                                      ? Icons.visibility_outlined
-                                      : Icons.visibility_off_outlined,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              // Full Name
+                              TextFormField(
+                                controller: _fullNameController,
+                                decoration: const InputDecoration(
+                                  labelText: 'Full Name',
+                                  prefixIcon: Icon(Icons.person_outlined),
+                                  border: OutlineInputBorder(),
                                 ),
-                                onPressed: () {
-                                  setState(() {
-                                    _obscurePassword = !_obscurePassword;
-                                  });
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter your full name';
+                                  }
+                                  return null;
                                 },
                               ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your password';
-                                }
-                                if (value.length < 6) {
-                                  return 'Password must be at least 6 characters';
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 16),
+                              const SizedBox(height: 16),
 
-                            // Confirm Password
-                            VHVTextField(
-                              controller: _confirmPasswordController,
-                              obscureText: _obscureConfirmPassword,
-                              label: 'Confirm Password',
-                              prefixIcon: const Icon(Icons.lock_outlined),
-                              suffixIcon: VHVIconButton(
-                                icon: Icon(
-                                  _obscureConfirmPassword
-                                      ? Icons.visibility_outlined
-                                      : Icons.visibility_off_outlined,
+                              // Email
+                              TextFormField(
+                                controller: _emailController,
+                                keyboardType: TextInputType.emailAddress,
+                                decoration: const InputDecoration(
+                                  labelText: 'Email',
+                                  prefixIcon: Icon(Icons.email_outlined),
+                                  border: OutlineInputBorder(),
                                 ),
-                                onPressed: () {
-                                  setState(() {
-                                    _obscureConfirmPassword = !_obscureConfirmPassword;
-                                  });
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter your email';
+                                  }
+                                  if (!value.contains('@')) {
+                                    return 'Please enter a valid email';
+                                  }
+                                  return null;
                                 },
                               ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please confirm your password';
-                                }
-                                if (value != _passwordController.text) {
-                                  return 'Passwords do not match';
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 16),
+                              const SizedBox(height: 16),
 
-                            // Terms & Conditions
-                            Row(
-                              children: [
-                                VHVCheckbox(
-                                  value: _acceptTerms,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _acceptTerms = value ?? false;
-                                    });
-                                  },
+                              // Password
+                              TextFormField(
+                                controller: _passwordController,
+                                obscureText: _obscurePassword,
+                                decoration: InputDecoration(
+                                  labelText: 'Password',
+                                  prefixIcon: const Icon(Icons.lock_outlined),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _obscurePassword
+                                          ? Icons.visibility_outlined
+                                          : Icons.visibility_off_outlined,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _obscurePassword = !_obscurePassword;
+                                      });
+                                    },
+                                  ),
+                                  border: const OutlineInputBorder(),
                                 ),
-                                Expanded(
-                                  child: Wrap(
-                                    children: [
-                                      const VHVText('I accept the '),
-                                      VHVTextButton(
-                                        onPressed: () {
-                                          // Show terms
-                                        },
-                                        child: const VHVText(
-                                          'Terms & Conditions',
-                                          style: TextStyle(
-                                            decoration: TextDecoration.underline,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter your password';
+                                  }
+                                  if (value.length < 6) {
+                                    return 'Password must be at least 6 characters';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 16),
+
+                              // Confirm Password
+                              TextFormField(
+                                controller: _confirmPasswordController,
+                                obscureText: _obscureConfirmPassword,
+                                decoration: InputDecoration(
+                                  labelText: 'Confirm Password',
+                                  prefixIcon: const Icon(Icons.lock_outlined),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _obscureConfirmPassword
+                                          ? Icons.visibility_outlined
+                                          : Icons.visibility_off_outlined,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _obscureConfirmPassword = !_obscureConfirmPassword;
+                                      });
+                                    },
+                                  ),
+                                  border: const OutlineInputBorder(),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please confirm your password';
+                                  }
+                                  if (value != _passwordController.text) {
+                                    return 'Passwords do not match';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 16),
+
+                              // Terms & Conditions
+                              Row(
+                                children: [
+                                  Checkbox(
+                                    value: _acceptTerms,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _acceptTerms = value ?? false;
+                                      });
+                                    },
+                                  ),
+                                  Expanded(
+                                    child: Wrap(
+                                      children: [
+                                        const Text('I accept the '),
+                                        TextButton(
+                                          onPressed: () {
+                                            // Show terms
+                                          },
+                                          style: TextButton.styleFrom(
+                                            padding: EdgeInsets.zero,
+                                            minimumSize: Size.zero,
+                                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                          ),
+                                          child: const Text(
+                                            'Terms & Conditions',
+                                            style: TextStyle(
+                                              decoration: TextDecoration.underline,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 24),
-
-                            // Register Button
-                            BlocBuilder<AuthBloc, AuthState>(
-                              builder: (context, state) {
-                                return VHVButton(
-                                  onPressed: _handleRegister,
-                                  loading: state is AuthLoading,
-                                  width: double.infinity,
-                                  height: 56,
-                                  gradient: const LinearGradient(
-                                    colors: [Color(0xFF10B981), Color(0xFF3B82F6)],
-                                  ),
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: const VHVText(
-                                    'Create Account',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
+                                      ],
                                     ),
                                   ),
-                                );
-                              },
-                            ),
-                          ],
+                                ],
+                              ),
+                              const SizedBox(height: 24),
+
+                              // Register Button
+                              BlocBuilder<AuthBloc, AuthState>(
+                                builder: (context, state) {
+                                  final isLoading = state is AuthLoading;
+                                  return Container(
+                                    width: double.infinity,
+                                    height: 56,
+                                    decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
+                                        colors: [Color(0xFF10B981), Color(0xFF3B82F6)],
+                                      ),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: ElevatedButton(
+                                      onPressed: isLoading ? null : _handleRegister,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.transparent,
+                                        shadowColor: Colors.transparent,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                      ),
+                                      child: isLoading
+                                          ? const SizedBox(
+                                              width: 24,
+                                              height: 24,
+                                              child: CircularProgressIndicator(
+                                                color: Colors.white,
+                                                strokeWidth: 2,
+                                              ),
+                                            )
+                                          : const Text(
+                                              'Create Account',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -318,15 +358,15 @@ class _RegisterPageVHVState extends State<RegisterPageVHV> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const VHVText(
+                        const Text(
                           'Already have an account? ',
                           style: TextStyle(color: Colors.white70),
                         ),
-                        VHVTextButton(
+                        TextButton(
                           onPressed: () {
                             context.go('/login');
                           },
-                          child: const VHVText(
+                          child: const Text(
                             'Sign In',
                             style: TextStyle(
                               color: Colors.white,

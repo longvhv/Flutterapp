@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vhv_widgets/vhv_widgets.dart';
 
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../domain/entities/dashboard_stats.dart';
 
-/// Home Page sử dụng VHV Widgets
+/// Home Page sử dụng Material Widgets
 class HomePageVHV extends StatefulWidget {
   const HomePageVHV({super.key});
 
@@ -25,39 +24,47 @@ class _HomePageVHVState extends State<HomePageVHV> {
   }
 
   Future<void> _loadData() async {
-    // Sử dụng VHV Load Manager
-    await VHVLoadManager.show(
+    // Show loading dialog
+    showDialog(
       context: context,
-      loadingText: 'Loading dashboard...',
-      future: Future.delayed(const Duration(seconds: 1)),
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
     );
 
-    setState(() {
-      _stats = DashboardStats(
-        totalUsers: 12453,
-        activeProjects: 48,
-        revenue: '\$125,430',
-        growth: '+12.5%',
-      );
-      _activities = [
-        Activity(
-          type: 'login',
-          message: 'Logged in from new device',
-          timestamp: DateTime.now().subtract(const Duration(minutes: 30)),
-        ),
-        Activity(
-          type: 'update',
-          message: 'Updated profile information',
-          timestamp: DateTime.now().subtract(const Duration(hours: 2)),
-        ),
-        Activity(
-          type: 'security',
-          message: 'Enabled two-factor authentication',
-          timestamp: DateTime.now().subtract(const Duration(days: 1)),
-        ),
-      ];
-      _isLoading = false;
-    });
+    await Future.delayed(const Duration(seconds: 1));
+
+    if (mounted) {
+      Navigator.of(context).pop(); // Close loading
+
+      setState(() {
+        _stats = DashboardStats(
+          totalUsers: 12453,
+          activeProjects: 48,
+          revenue: '\$125,430',
+          growth: '+12.5%',
+        );
+        _activities = [
+          Activity(
+            type: 'login',
+            message: 'Logged in from new device',
+            timestamp: DateTime.now().subtract(const Duration(minutes: 30)),
+          ),
+          Activity(
+            type: 'update',
+            message: 'Updated profile information',
+            timestamp: DateTime.now().subtract(const Duration(hours: 2)),
+          ),
+          Activity(
+            type: 'security',
+            message: 'Enabled two-factor authentication',
+            timestamp: DateTime.now().subtract(const Duration(days: 1)),
+          ),
+        ];
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -67,11 +74,11 @@ class _HomePageVHVState extends State<HomePageVHV> {
       return state is AuthAuthenticated ? state.user : null;
     });
 
-    return VHVScaffold(
+    return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // Header với Gradient - Sử dụng VHV AppBar
-          VHVSliverAppBar(
+          // Header với Gradient
+          SliverAppBar(
             expandedHeight: 280,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
@@ -92,7 +99,7 @@ class _HomePageVHVState extends State<HomePageVHV> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        VHVText(
+                        Text(
                           'Welcome back',
                           style: TextStyle(
                             color: Colors.blue.shade100,
@@ -100,7 +107,7 @@ class _HomePageVHVState extends State<HomePageVHV> {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        VHVText(
+                        Text(
                           user?.fullName ?? 'User',
                           style: const TextStyle(
                             color: Colors.white,
@@ -110,14 +117,15 @@ class _HomePageVHVState extends State<HomePageVHV> {
                         ),
                         const SizedBox(height: 24),
                         
-                        // Stats Grid - Sử dụng VHV Grid
+                        // Stats Grid
                         if (_stats != null)
-                          VHVGridView(
+                          GridView.count(
                             crossAxisCount: 2,
                             mainAxisSpacing: 12,
                             crossAxisSpacing: 12,
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
+                            childAspectRatio: 1.3,
                             children: [
                               _buildStatCard(
                                 icon: Icons.people,
@@ -153,77 +161,84 @@ class _HomePageVHVState extends State<HomePageVHV> {
             ),
           ),
           
-          // Recent Activity - Sử dụng VHV List
+          // Recent Activity
           SliverPadding(
             padding: const EdgeInsets.all(16),
             sliver: SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  VHVText(
+                  Text(
                     'Recent Activity',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 16),
                   
                   if (_isLoading)
-                    VHVShimmer(
-                      child: Column(
-                        children: List.generate(
-                          3,
-                          (index) => VHVShimmerItem(
-                            height: 80,
-                            margin: const EdgeInsets.only(bottom: 12),
+                    Column(
+                      children: List.generate(
+                        3,
+                        (index) => Container(
+                          height: 80,
+                          margin: const EdgeInsets.only(bottom: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
                       ),
                     )
                   else
-                    VHVListView(
+                    ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: _activities.length,
                       itemBuilder: (context, index) {
                         final activity = _activities[index];
-                        return VHVCard(
+                        return Card(
                           margin: const EdgeInsets.only(bottom: 12),
-                          padding: const EdgeInsets.all(16),
-                          onTap: () {
-                            // Handle tap
-                          },
-                          child: Row(
-                            children: [
-                              VHVAvatar(
-                                radius: 24,
-                                backgroundColor: _getActivityColor(activity.type),
-                                child: Icon(
-                                  _getActivityIcon(activity.type),
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    VHVText(
-                                      activity.message,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                          child: InkWell(
+                            onTap: () {
+                              // Handle tap
+                            },
+                            borderRadius: BorderRadius.circular(12),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 24,
+                                    backgroundColor: _getActivityColor(activity.type),
+                                    child: Icon(
+                                      _getActivityIcon(activity.type),
+                                      color: Colors.white,
                                     ),
-                                    const SizedBox(height: 4),
-                                    VHVText(
-                                      _formatTime(activity.timestamp),
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey.shade600,
-                                      ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          activity.message,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          _formatTime(activity.timestamp),
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey.shade600,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
                         );
                       },
@@ -232,13 +247,13 @@ class _HomePageVHVState extends State<HomePageVHV> {
                   const SizedBox(height: 24),
                   
                   // Quick Actions
-                  VHVText(
+                  Text(
                     'Quick Actions',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 16),
                   
-                  VHVGridView(
+                  GridView.count(
                     crossAxisCount: 3,
                     mainAxisSpacing: 12,
                     crossAxisSpacing: 12,
@@ -277,34 +292,36 @@ class _HomePageVHVState extends State<HomePageVHV> {
     required String value,
     required Color color,
   }) {
-    return VHVCard(
-      padding: const EdgeInsets.all(16),
-      backgroundColor: Colors.white.withOpacity(0.95),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          VHVAvatar(
-            radius: 20,
-            backgroundColor: color,
-            child: Icon(icon, color: Colors.white, size: 20),
-          ),
-          const SizedBox(height: 12),
-          VHVText(
-            value,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+    return Card(
+      color: Colors.white.withOpacity(0.95),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              radius: 20,
+              backgroundColor: color,
+              child: Icon(icon, color: Colors.white, size: 20),
             ),
-          ),
-          const SizedBox(height: 4),
-          VHVText(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey.shade600,
+            const SizedBox(height: 12),
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey.shade600,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -314,26 +331,31 @@ class _HomePageVHVState extends State<HomePageVHV> {
     required String label,
     required Color color,
   }) {
-    return VHVCard(
-      padding: const EdgeInsets.all(16),
-      onTap: () {
-        // Handle tap
-      },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          VHVAvatar(
-            radius: 24,
-            backgroundColor: color,
-            child: Icon(icon, color: Colors.white),
+    return Card(
+      child: InkWell(
+        onTap: () {
+          // Handle tap
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 24,
+                backgroundColor: color,
+                child: Icon(icon, color: Colors.white),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                label,
+                style: const TextStyle(fontSize: 12),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
-          VHVText(
-            label,
-            style: const TextStyle(fontSize: 12),
-            textAlign: TextAlign.center,
-          ),
-        ],
+        ),
       ),
     );
   }

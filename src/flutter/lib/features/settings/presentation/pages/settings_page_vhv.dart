@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:vhv_widgets/vhv_widgets.dart';
 
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 
-/// Settings Page sử dụng VHV Widgets
+/// Settings Page sử dụng Material Widgets
 class SettingsPageVHV extends StatefulWidget {
   const SettingsPageVHV({super.key});
 
@@ -26,11 +25,11 @@ class _SettingsPageVHVState extends State<SettingsPageVHV> {
       return state is AuthAuthenticated ? state.user : null;
     });
 
-    return VHVScaffold(
+    return Scaffold(
       body: CustomScrollView(
         slivers: [
           // App Bar với Gradient
-          VHVSliverAppBar(
+          SliverAppBar(
             expandedHeight: 200,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
@@ -53,7 +52,7 @@ class _SettingsPageVHVState extends State<SettingsPageVHV> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        const VHVText(
+                        const Text(
                           'Settings',
                           style: TextStyle(
                             color: Colors.white,
@@ -62,7 +61,7 @@ class _SettingsPageVHVState extends State<SettingsPageVHV> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        VHVText(
+                        Text(
                           user?.email ?? 'user@example.com',
                           style: const TextStyle(
                             color: Colors.white70,
@@ -84,8 +83,7 @@ class _SettingsPageVHVState extends State<SettingsPageVHV> {
               delegate: SliverChildListDelegate([
                 // Account Section
                 _buildSectionHeader('Account'),
-                VHVCard(
-                  padding: EdgeInsets.zero,
+                Card(
                   child: Column(
                     children: [
                       _buildSettingItem(
@@ -118,8 +116,7 @@ class _SettingsPageVHVState extends State<SettingsPageVHV> {
 
                 // Preferences Section
                 _buildSectionHeader('Preferences'),
-                VHVCard(
-                  padding: EdgeInsets.zero,
+                Card(
                   child: Column(
                     children: [
                       _buildSwitchItem(
@@ -180,8 +177,7 @@ class _SettingsPageVHVState extends State<SettingsPageVHV> {
 
                 // Privacy & Security Section
                 _buildSectionHeader('Privacy & Security'),
-                VHVCard(
-                  padding: EdgeInsets.zero,
+                Card(
                   child: Column(
                     children: [
                       _buildSettingItem(
@@ -197,10 +193,13 @@ class _SettingsPageVHVState extends State<SettingsPageVHV> {
                         title: 'Two-Factor Authentication',
                         subtitle: 'Add an extra layer of security',
                         onTap: () {
-                          VHVToast.show(
-                            context: context,
-                            message: 'Feature coming soon',
-                            type: VHVToastType.info,
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: const Text('Feature coming soon'),
+                              backgroundColor: Colors.blue,
+                              behavior: SnackBarBehavior.floating,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            ),
                           );
                         },
                         color: const Color(0xFF10B981),
@@ -212,8 +211,7 @@ class _SettingsPageVHVState extends State<SettingsPageVHV> {
 
                 // Support Section
                 _buildSectionHeader('Support'),
-                VHVCard(
-                  padding: EdgeInsets.zero,
+                Card(
                   child: Column(
                     children: [
                       _buildSettingItem(
@@ -245,35 +243,40 @@ class _SettingsPageVHVState extends State<SettingsPageVHV> {
                 const SizedBox(height: 24),
 
                 // Logout Button
-                VHVButton(
+                ElevatedButton(
                   onPressed: () {
-                    VHVDialog.show(
+                    showDialog(
                       context: context,
-                      title: 'Logout',
-                      content: 'Are you sure you want to logout?',
-                      actions: [
-                        VHVTextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const VHVText('Cancel'),
-                        ),
-                        VHVButton(
-                          onPressed: () {
-                            context.read<AuthBloc>().add(AuthLogoutRequested());
-                            context.go('/login');
-                          },
-                          child: const VHVText('Logout'),
-                        ),
-                      ],
+                      builder: (context) => AlertDialog(
+                        title: const Text('Logout'),
+                        content: const Text('Are you sure you want to logout?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Cancel'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              context.read<AuthBloc>().add(AuthLogoutRequested());
+                              context.go('/login');
+                            },
+                            child: const Text('Logout'),
+                          ),
+                        ],
+                      ),
                     );
                   },
-                  width: double.infinity,
-                  height: 56,
-                  backgroundColor: const Color(0xFFEF4444),
-                  borderRadius: BorderRadius.circular(12),
-                  child: const VHVText(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFEF4444),
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size(double.infinity, 56),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
                     'Logout',
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -283,7 +286,7 @@ class _SettingsPageVHVState extends State<SettingsPageVHV> {
 
                 // App Version
                 Center(
-                  child: VHVText(
+                  child: Text(
                     'Version 1.0.0',
                     style: TextStyle(
                       fontSize: 12,
@@ -303,7 +306,7 @@ class _SettingsPageVHVState extends State<SettingsPageVHV> {
   Widget _buildSectionHeader(String title) {
     return Padding(
       padding: const EdgeInsets.only(left: 4, bottom: 12),
-      child: VHVText(
+      child: Text(
         title,
         style: const TextStyle(
           fontSize: 14,
@@ -321,17 +324,17 @@ class _SettingsPageVHVState extends State<SettingsPageVHV> {
     required VoidCallback onTap,
     required Color color,
   }) {
-    return VHVListTile(
-      leading: VHVAvatar(
+    return ListTile(
+      leading: CircleAvatar(
         radius: 20,
         backgroundColor: color.withOpacity(0.1),
         child: Icon(icon, color: color, size: 20),
       ),
-      title: VHVText(
+      title: Text(
         title,
         style: const TextStyle(fontWeight: FontWeight.w500),
       ),
-      subtitle: VHVText(
+      subtitle: Text(
         subtitle,
         style: const TextStyle(fontSize: 12),
       ),
@@ -348,21 +351,21 @@ class _SettingsPageVHVState extends State<SettingsPageVHV> {
     required ValueChanged<bool> onChanged,
     required Color color,
   }) {
-    return VHVListTile(
-      leading: VHVAvatar(
+    return ListTile(
+      leading: CircleAvatar(
         radius: 20,
         backgroundColor: color.withOpacity(0.1),
         child: Icon(icon, color: color, size: 20),
       ),
-      title: VHVText(
+      title: Text(
         title,
         style: const TextStyle(fontWeight: FontWeight.w500),
       ),
-      subtitle: VHVText(
+      subtitle: Text(
         subtitle,
         style: const TextStyle(fontSize: 12),
       ),
-      trailing: VHVSwitch(
+      trailing: Switch(
         value: value,
         onChanged: onChanged,
       ),

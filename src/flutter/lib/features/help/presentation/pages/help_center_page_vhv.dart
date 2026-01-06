@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:vhv_widgets/vhv_widgets.dart';
 
-/// Help Center Page sử dụng VHV Widgets
+/// Help Center Page sử dụng Material Widgets
 class HelpCenterPageVHV extends StatefulWidget {
   const HelpCenterPageVHV({super.key});
 
@@ -81,12 +80,12 @@ class _HelpCenterPageVHVState extends State<HelpCenterPageVHV> {
                   children: [
                     Row(
                       children: [
-                        VHVIconButton(
+                        IconButton(
                           icon: const Icon(Icons.arrow_back, color: Colors.white),
                           onPressed: () => context.pop(),
                         ),
                         const Spacer(),
-                        VHVIconButton(
+                        IconButton(
                           icon: const Icon(Icons.mail_outline, color: Colors.white),
                           onPressed: () {
                             _showContactSupport();
@@ -95,7 +94,7 @@ class _HelpCenterPageVHVState extends State<HelpCenterPageVHV> {
                       ],
                     ),
                     const SizedBox(height: 24),
-                    const VHVText(
+                    const Text(
                       'How can we help?',
                       style: TextStyle(
                         color: Colors.white,
@@ -106,10 +105,16 @@ class _HelpCenterPageVHVState extends State<HelpCenterPageVHV> {
                     const SizedBox(height: 16),
 
                     // Search Bar
-                    VHVTextField(
-                      prefixIcon: const Icon(Icons.search),
-                      label: 'Search for help',
-                      fillColor: Colors.white,
+                    TextField(
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.search),
+                        labelText: 'Search for help',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -131,7 +136,7 @@ class _HelpCenterPageVHVState extends State<HelpCenterPageVHV> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Quick Actions
-                        const VHVText(
+                        const Text(
                           'Quick Actions',
                           style: TextStyle(
                             fontSize: 18,
@@ -139,7 +144,7 @@ class _HelpCenterPageVHVState extends State<HelpCenterPageVHV> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        VHVGridView(
+                        GridView.count(
                           crossAxisCount: 2,
                           mainAxisSpacing: 12,
                           crossAxisSpacing: 12,
@@ -150,10 +155,13 @@ class _HelpCenterPageVHVState extends State<HelpCenterPageVHV> {
                               icon: Icons.chat_bubble_outline,
                               title: 'Live Chat',
                               onTap: () {
-                                VHVToast.show(
-                                  context: context,
-                                  message: 'Chat feature coming soon',
-                                  type: VHVToastType.info,
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: const Text('Chat feature coming soon'),
+                                    backgroundColor: Colors.blue,
+                                    behavior: SnackBarBehavior.floating,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                  ),
                                 );
                               },
                               color: const Color(0xFF3B82F6),
@@ -169,7 +177,7 @@ class _HelpCenterPageVHVState extends State<HelpCenterPageVHV> {
                         const SizedBox(height: 32),
 
                         // Categories
-                        const VHVText(
+                        const Text(
                           'Browse by Category',
                           style: TextStyle(
                             fontSize: 18,
@@ -177,69 +185,77 @@ class _HelpCenterPageVHVState extends State<HelpCenterPageVHV> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        VHVListView(
+                        ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: _categories.length,
                           itemBuilder: (context, index) {
                             final category = _categories[index];
-                            return VHVCard(
+                            return Card(
                               margin: const EdgeInsets.only(bottom: 12),
-                              padding: const EdgeInsets.all(16),
-                              onTap: () {
-                                VHVToast.show(
-                                  context: context,
-                                  message: '${category.title} articles coming soon',
-                                  type: VHVToastType.info,
-                                );
-                              },
-                              child: Row(
-                                children: [
-                                  VHVAvatar(
-                                    radius: 28,
-                                    backgroundColor: category.color.withOpacity(0.1),
-                                    child: Icon(
-                                      category.icon,
-                                      color: category.color,
-                                      size: 28,
+                              child: InkWell(
+                                onTap: () {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('${category.title} articles coming soon'),
+                                      backgroundColor: Colors.blue,
+                                      behavior: SnackBarBehavior.floating,
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                                     ),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        VHVText(
-                                          category.title,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                  );
+                                },
+                                borderRadius: BorderRadius.circular(12),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 28,
+                                        backgroundColor: category.color.withOpacity(0.1),
+                                        child: Icon(
+                                          category.icon,
+                                          color: category.color,
+                                          size: 28,
                                         ),
-                                        const SizedBox(height: 4),
-                                        VHVText(
-                                          category.description,
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.grey.shade600,
-                                          ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              category.title,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              category.description,
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.grey.shade600,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              '${category.articles} articles',
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                color: category.color,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        const SizedBox(height: 4),
-                                        VHVText(
-                                          '${category.articles} articles',
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            color: category.color,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                      Icon(
+                                        Icons.chevron_right,
+                                        color: Colors.grey.shade400,
+                                      ),
+                                    ],
                                   ),
-                                  Icon(
-                                    Icons.chevron_right,
-                                    color: Colors.grey.shade400,
-                                  ),
-                                ],
+                                ),
                               ),
                             );
                           },
@@ -248,11 +264,14 @@ class _HelpCenterPageVHVState extends State<HelpCenterPageVHV> {
                         const SizedBox(height: 32),
 
                         // Contact Support Card
-                        VHVCard(
-                          padding: const EdgeInsets.all(20),
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF3B82F6), Color(0xFF8B5CF6)],
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF3B82F6), Color(0xFF8B5CF6)],
+                            ),
+                            borderRadius: BorderRadius.circular(12),
                           ),
+                          padding: const EdgeInsets.all(20),
                           child: Column(
                             children: [
                               const Icon(
@@ -261,7 +280,7 @@ class _HelpCenterPageVHVState extends State<HelpCenterPageVHV> {
                                 size: 48,
                               ),
                               const SizedBox(height: 16),
-                              const VHVText(
+                              const Text(
                                 'Still need help?',
                                 style: TextStyle(
                                   color: Colors.white,
@@ -270,7 +289,7 @@ class _HelpCenterPageVHVState extends State<HelpCenterPageVHV> {
                                 ),
                               ),
                               const SizedBox(height: 8),
-                              const VHVText(
+                              const Text(
                                 'Contact our support team',
                                 style: TextStyle(
                                   color: Colors.white70,
@@ -278,15 +297,19 @@ class _HelpCenterPageVHVState extends State<HelpCenterPageVHV> {
                                 ),
                               ),
                               const SizedBox(height: 16),
-                              VHVButton(
+                              ElevatedButton(
                                 onPressed: _showContactSupport,
-                                backgroundColor: Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                                height: 48,
-                                child: const VHVText(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  foregroundColor: const Color(0xFF3B82F6),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  minimumSize: const Size(double.infinity, 48),
+                                ),
+                                child: const Text(
                                   'Contact Support',
                                   style: TextStyle(
-                                    color: Color(0xFF3B82F6),
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -312,59 +335,72 @@ class _HelpCenterPageVHVState extends State<HelpCenterPageVHV> {
     required VoidCallback onTap,
     required Color color,
   }) {
-    return VHVCard(
-      padding: const EdgeInsets.all(20),
-      onTap: onTap,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          VHVAvatar(
-            radius: 32,
-            backgroundColor: color.withOpacity(0.1),
-            child: Icon(icon, color: color, size: 32),
+    return Card(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 32,
+                backgroundColor: color.withOpacity(0.1),
+                child: Icon(icon, color: color, size: 32),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
-          const SizedBox(height: 12),
-          VHVText(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+        ),
       ),
     );
   }
 
   void _showContactSupport() {
-    VHVDialog.show(
+    showDialog(
       context: context,
-      title: 'Contact Support',
-      content: 'Choose how you\'d like to contact us:',
-      actions: [
-        VHVButton(
-          onPressed: () {
-            Navigator.pop(context);
-            VHVToast.show(
-              context: context,
-              message: 'Opening email client...',
-              type: VHVToastType.info,
-            );
-          },
-          child: const VHVText('Email', style: TextStyle(color: Colors.white)),
-        ),
-        VHVButton(
-          onPressed: () {
-            Navigator.pop(context);
-            VHVToast.show(
-              context: context,
-              message: 'Starting chat...',
-              type: VHVToastType.info,
-            );
-          },
-          child: const VHVText('Chat', style: TextStyle(color: Colors.white)),
-        ),
-      ],
+      builder: (context) => AlertDialog(
+        title: const Text('Contact Support'),
+        content: const Text('Choose how you\'d like to contact us:'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text('Opening email client...'),
+                  backgroundColor: Colors.blue,
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+              );
+            },
+            child: const Text('Email'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text('Starting chat...'),
+                  backgroundColor: Colors.blue,
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+              );
+            },
+            child: const Text('Chat'),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:vhv_widgets/vhv_widgets.dart';
 
-/// Privacy Page sử dụng VHV Widgets
+/// Privacy Page sử dụng Material Widgets
 class PrivacyPageVHV extends StatefulWidget {
   const PrivacyPageVHV({super.key});
 
@@ -41,7 +40,7 @@ class _PrivacyPageVHVState extends State<PrivacyPageVHV> {
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    VHVIconButton(
+                    IconButton(
                       icon: const Icon(Icons.arrow_back, color: Colors.white),
                       onPressed: () => context.pop(),
                     ),
@@ -49,7 +48,7 @@ class _PrivacyPageVHVState extends State<PrivacyPageVHV> {
                     const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        VHVText(
+                        Text(
                           'Privacy & Security',
                           style: TextStyle(
                             color: Colors.white,
@@ -57,7 +56,7 @@ class _PrivacyPageVHVState extends State<PrivacyPageVHV> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        VHVText(
+                        Text(
                           'Manage your privacy settings',
                           style: TextStyle(
                             color: Colors.white70,
@@ -86,7 +85,7 @@ class _PrivacyPageVHVState extends State<PrivacyPageVHV> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Privacy Settings
-                        const VHVText(
+                        const Text(
                           'Privacy Settings',
                           style: TextStyle(
                             fontSize: 18,
@@ -94,8 +93,7 @@ class _PrivacyPageVHVState extends State<PrivacyPageVHV> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        VHVCard(
-                          padding: EdgeInsets.zero,
+                        Card(
                           child: Column(
                             children: [
                               _buildSwitchTile(
@@ -147,7 +145,7 @@ class _PrivacyPageVHVState extends State<PrivacyPageVHV> {
                         const SizedBox(height: 24),
 
                         // Security Settings
-                        const VHVText(
+                        const Text(
                           'Security Settings',
                           style: TextStyle(
                             fontSize: 18,
@@ -155,8 +153,7 @@ class _PrivacyPageVHVState extends State<PrivacyPageVHV> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        VHVCard(
-                          padding: EdgeInsets.zero,
+                        Card(
                           child: Column(
                             children: [
                               _buildSwitchTile(
@@ -186,10 +183,13 @@ class _PrivacyPageVHVState extends State<PrivacyPageVHV> {
                                 title: 'Login History',
                                 subtitle: 'View recent login activity',
                                 onTap: () {
-                                  VHVToast.show(
-                                    context: context,
-                                    message: 'Feature coming soon',
-                                    type: VHVToastType.info,
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: const Text('Feature coming soon'),
+                                      backgroundColor: Colors.blue,
+                                      behavior: SnackBarBehavior.floating,
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                    ),
                                   );
                                 },
                                 color: const Color(0xFF3B82F6),
@@ -200,7 +200,7 @@ class _PrivacyPageVHVState extends State<PrivacyPageVHV> {
                         const SizedBox(height: 24),
 
                         // Data Management
-                        const VHVText(
+                        const Text(
                           'Data Management',
                           style: TextStyle(
                             fontSize: 18,
@@ -208,8 +208,7 @@ class _PrivacyPageVHVState extends State<PrivacyPageVHV> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        VHVCard(
-                          padding: EdgeInsets.zero,
+                        Card(
                           child: Column(
                             children: [
                               _buildSettingTile(
@@ -237,48 +236,50 @@ class _PrivacyPageVHVState extends State<PrivacyPageVHV> {
                         const SizedBox(height: 24),
 
                         // Privacy Policy
-                        VHVCard(
-                          padding: const EdgeInsets.all(16),
-                          backgroundColor: Colors.blue.shade50,
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.info_outline,
-                                color: Colors.blue.shade700,
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    VHVText(
-                                      'Privacy Policy',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.blue.shade900,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    VHVText(
-                                      'Learn how we collect, use, and protect your data',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.blue.shade700,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              VHVIconButton(
-                                icon: Icon(
-                                  Icons.arrow_forward,
+                        Card(
+                          color: Colors.blue.shade50,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.info_outline,
                                   color: Colors.blue.shade700,
                                 ),
-                                onPressed: () {
-                                  // Open privacy policy
-                                },
-                              ),
-                            ],
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Privacy Policy',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.blue.shade900,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'Learn how we collect, use, and protect your data',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.blue.shade700,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.arrow_forward,
+                                    color: Colors.blue.shade700,
+                                  ),
+                                  onPressed: () {
+                                    // Open privacy policy
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -301,21 +302,21 @@ class _PrivacyPageVHVState extends State<PrivacyPageVHV> {
     required ValueChanged<bool> onChanged,
     required Color color,
   }) {
-    return VHVListTile(
-      leading: VHVAvatar(
+    return ListTile(
+      leading: CircleAvatar(
         radius: 20,
         backgroundColor: color.withOpacity(0.1),
         child: Icon(icon, color: color, size: 20),
       ),
-      title: VHVText(
+      title: Text(
         title,
         style: const TextStyle(fontWeight: FontWeight.w500),
       ),
-      subtitle: VHVText(
+      subtitle: Text(
         subtitle,
         style: const TextStyle(fontSize: 12),
       ),
-      trailing: VHVSwitch(
+      trailing: Switch(
         value: value,
         onChanged: onChanged,
       ),
@@ -329,17 +330,17 @@ class _PrivacyPageVHVState extends State<PrivacyPageVHV> {
     required VoidCallback onTap,
     required Color color,
   }) {
-    return VHVListTile(
-      leading: VHVAvatar(
+    return ListTile(
+      leading: CircleAvatar(
         radius: 20,
         backgroundColor: color.withOpacity(0.1),
         child: Icon(icon, color: color, size: 20),
       ),
-      title: VHVText(
+      title: Text(
         title,
         style: const TextStyle(fontWeight: FontWeight.w500),
       ),
-      subtitle: VHVText(
+      subtitle: Text(
         subtitle,
         style: const TextStyle(fontSize: 12),
       ),
@@ -349,53 +350,66 @@ class _PrivacyPageVHVState extends State<PrivacyPageVHV> {
   }
 
   void _showDownloadDialog() {
-    VHVDialog.show(
+    showDialog(
       context: context,
-      title: 'Download Your Data',
-      content: 'We\'ll prepare your data and send you a download link via email within 48 hours.',
-      actions: [
-        VHVTextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const VHVText('Cancel'),
-        ),
-        VHVButton(
-          onPressed: () {
-            Navigator.pop(context);
-            VHVToast.show(
-              context: context,
-              message: 'Download request submitted',
-              type: VHVToastType.success,
-            );
-          },
-          child: const VHVText('Request Download', style: TextStyle(color: Colors.white)),
-        ),
-      ],
+      builder: (context) => AlertDialog(
+        title: const Text('Download Your Data'),
+        content: const Text('We\'ll prepare your data and send you a download link via email within 48 hours.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text('Download request submitted'),
+                  backgroundColor: Colors.green,
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+              );
+            },
+            child: const Text('Request Download'),
+          ),
+        ],
+      ),
     );
   }
 
   void _showDeleteAccountDialog() {
-    VHVDialog.show(
+    showDialog(
       context: context,
-      title: 'Delete Account',
-      content: 'Are you sure? This action cannot be undone. All your data will be permanently deleted.',
-      actions: [
-        VHVTextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const VHVText('Cancel'),
-        ),
-        VHVButton(
-          onPressed: () {
-            Navigator.pop(context);
-            VHVToast.show(
-              context: context,
-              message: 'Account deletion cancelled',
-              type: VHVToastType.info,
-            );
-          },
-          backgroundColor: const Color(0xFFEF4444),
-          child: const VHVText('Delete', style: TextStyle(color: Colors.white)),
-        ),
-      ],
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Account'),
+        content: const Text('Are you sure? This action cannot be undone. All your data will be permanently deleted.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text('Account deletion cancelled'),
+                  backgroundColor: Colors.blue,
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFEF4444),
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:vhv_widgets/vhv_widgets.dart';
 
-/// FAQ Page sử dụng VHV Widgets
+/// FAQ Page sử dụng Material Widgets
 class FaqPageVHV extends StatefulWidget {
   const FaqPageVHV({super.key});
 
@@ -91,12 +90,12 @@ class _FaqPageVHVState extends State<FaqPageVHV> {
                   children: [
                     Row(
                       children: [
-                        VHVIconButton(
+                        IconButton(
                           icon: const Icon(Icons.arrow_back, color: Colors.white),
                           onPressed: () => context.pop(),
                         ),
                         const SizedBox(width: 12),
-                        const VHVText(
+                        const Text(
                           'Frequently Asked Questions',
                           style: TextStyle(
                             color: Colors.white,
@@ -109,10 +108,16 @@ class _FaqPageVHVState extends State<FaqPageVHV> {
                     const SizedBox(height: 16),
 
                     // Search Bar
-                    VHVTextField(
-                      prefixIcon: const Icon(Icons.search),
-                      label: 'Search FAQs',
-                      fillColor: Colors.white,
+                    TextField(
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.search),
+                        labelText: 'Search FAQs',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
                       onChanged: (value) {
                         setState(() => _searchQuery = value);
                       },
@@ -142,7 +147,7 @@ class _FaqPageVHVState extends State<FaqPageVHV> {
                                 color: Colors.grey.shade400,
                               ),
                               const SizedBox(height: 16),
-                              VHVText(
+                              Text(
                                 'No results found',
                                 style: TextStyle(
                                   fontSize: 18,
@@ -159,17 +164,16 @@ class _FaqPageVHVState extends State<FaqPageVHV> {
                             final faq = _filteredFaqs[index];
                             final isExpanded = _expandedQuestion == faq.question;
 
-                            return VHVCard(
+                            return Card(
                               margin: const EdgeInsets.only(bottom: 12),
-                              padding: EdgeInsets.zero,
-                              child: VHVExpansionTile(
-                                title: VHVText(
+                              child: ExpansionTile(
+                                title: Text(
                                   faq.question,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                leading: VHVAvatar(
+                                leading: CircleAvatar(
                                   radius: 20,
                                   backgroundColor: _getCategoryColor(faq.category).withOpacity(0.1),
                                   child: Icon(
@@ -197,7 +201,7 @@ class _FaqPageVHVState extends State<FaqPageVHV> {
                                       children: [
                                         const Divider(),
                                         const SizedBox(height: 12),
-                                        VHVText(
+                                        Text(
                                           faq.answer,
                                           style: TextStyle(
                                             fontSize: 14,
@@ -206,16 +210,22 @@ class _FaqPageVHVState extends State<FaqPageVHV> {
                                           ),
                                         ),
                                         const SizedBox(height: 12),
-                                        VHVChip(
-                                          label: faq.category,
+                                        Chip(
+                                          label: Text(
+                                            faq.category,
+                                            style: TextStyle(
+                                              color: _getCategoryColor(faq.category),
+                                              fontSize: 11,
+                                            ),
+                                          ),
                                           backgroundColor: _getCategoryColor(faq.category).withOpacity(0.1),
-                                          textColor: _getCategoryColor(faq.category),
-                                          size: VHVChipSize.small,
+                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                         ),
                                         const SizedBox(height: 12),
                                         Row(
                                           children: [
-                                            VHVText(
+                                            Text(
                                               'Was this helpful?',
                                               style: TextStyle(
                                                 fontSize: 12,
@@ -223,31 +233,37 @@ class _FaqPageVHVState extends State<FaqPageVHV> {
                                               ),
                                             ),
                                             const SizedBox(width: 12),
-                                            VHVIconButton(
+                                            IconButton(
                                               icon: Icon(
                                                 Icons.thumb_up_outlined,
                                                 size: 16,
                                                 color: Colors.grey.shade600,
                                               ),
                                               onPressed: () {
-                                                VHVToast.show(
-                                                  context: context,
-                                                  message: 'Thanks for your feedback!',
-                                                  type: VHVToastType.success,
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(
+                                                    content: const Text('Thanks for your feedback!'),
+                                                    backgroundColor: Colors.green,
+                                                    behavior: SnackBarBehavior.floating,
+                                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                                  ),
                                                 );
                                               },
                                             ),
-                                            VHVIconButton(
+                                            IconButton(
                                               icon: Icon(
                                                 Icons.thumb_down_outlined,
                                                 size: 16,
                                                 color: Colors.grey.shade600,
                                               ),
                                               onPressed: () {
-                                                VHVToast.show(
-                                                  context: context,
-                                                  message: 'We\'ll improve this answer',
-                                                  type: VHVToastType.info,
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(
+                                                    content: const Text('We\'ll improve this answer'),
+                                                    backgroundColor: Colors.blue,
+                                                    behavior: SnackBarBehavior.floating,
+                                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                                  ),
                                                 );
                                               },
                                             ),
@@ -267,7 +283,7 @@ class _FaqPageVHVState extends State<FaqPageVHV> {
           ),
         ),
       ),
-      floatingActionButton: VHVFloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
           context.push('/help');
         },

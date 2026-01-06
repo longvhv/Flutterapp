@@ -52,7 +52,6 @@
           "package:go_router": "*",
           "package:hydrated_bloc": "*",
           "package:path_provider": "*",
-          "package:vhv_widgets": "*",
           "react": "^18.3.1",
           "react-day-picker": "^8.10.1",
           "react-dom": "^18.3.1",

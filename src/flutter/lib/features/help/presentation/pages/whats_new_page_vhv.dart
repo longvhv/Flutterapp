@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:vhv_widgets/vhv_widgets.dart';
 
-/// What's New Page sử dụng VHV Widgets
+/// What's New Page sử dụng Material Widgets
 class WhatsNewPageVHV extends StatelessWidget {
   const WhatsNewPageVHV({super.key});
 
@@ -104,7 +103,7 @@ class WhatsNewPageVHV extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    VHVIconButton(
+                    IconButton(
                       icon: const Icon(Icons.arrow_back, color: Colors.white),
                       onPressed: () => context.pop(),
                     ),
@@ -112,7 +111,7 @@ class WhatsNewPageVHV extends StatelessWidget {
                     const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        VHVText(
+                        Text(
                           "What's New",
                           style: TextStyle(
                             color: Colors.white,
@@ -120,7 +119,7 @@ class WhatsNewPageVHV extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        VHVText(
+                        Text(
                           'Latest features and updates',
                           style: TextStyle(
                             color: Colors.white70,
@@ -156,7 +155,7 @@ class WhatsNewPageVHV extends StatelessWidget {
                           // Version Header
                           Row(
                             children: [
-                              VHVAvatar(
+                              CircleAvatar(
                                 radius: 20,
                                 backgroundColor: isLatest
                                     ? const Color(0xFF10B981)
@@ -173,26 +172,35 @@ class WhatsNewPageVHV extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                      VHVText(
+                                      Text(
                                         'Version ${release.version}',
                                         style: const TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      if (isLatest) ...[
+                                      if (isLatest) ...[ 
                                         const SizedBox(width: 8),
-                                        VHVChip(
-                                          label: 'Latest',
+                                        Chip(
+                                          label: const Text(
+                                            'Latest',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10,
+                                            ),
+                                          ),
                                           backgroundColor: const Color(0xFF10B981),
-                                          textColor: Colors.white,
-                                          size: VHVChipSize.small,
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 0,
+                                          ),
+                                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                         ),
                                       ],
                                     ],
                                   ),
                                   const SizedBox(height: 4),
-                                  VHVText(
+                                  Text(
                                     _formatDate(release.date),
                                     style: TextStyle(
                                       fontSize: 12,
@@ -207,50 +215,52 @@ class WhatsNewPageVHV extends StatelessWidget {
 
                           // Features
                           ...release.features.map((feature) {
-                            return VHVCard(
+                            return Card(
                               margin: const EdgeInsets.only(bottom: 12),
-                              padding: const EdgeInsets.all(16),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  VHVAvatar(
-                                    radius: 24,
-                                    backgroundColor: feature.color.withOpacity(0.1),
-                                    child: Icon(
-                                      feature.icon,
-                                      color: feature.color,
-                                      size: 24,
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 24,
+                                      backgroundColor: feature.color.withOpacity(0.1),
+                                      child: Icon(
+                                        feature.icon,
+                                        color: feature.color,
+                                        size: 24,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        VHVText(
-                                          feature.title,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            feature.title,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
                                           ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        VHVText(
-                                          feature.description,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey.shade700,
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            feature.description,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey.shade700,
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             );
                           }).toList(),
 
-                          if (index < releases.length - 1) ...[
+                          if (index < releases.length - 1) ...[ 
                             const SizedBox(height: 24),
                             const Divider(),
                             const SizedBox(height: 24),

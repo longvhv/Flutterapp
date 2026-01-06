@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:vhv_widgets/vhv_widgets.dart';
 import 'package:go_router/go_router.dart';
 
-/// Sử dụng trực tiếp VHV Bottom Navigation Bar
+/// Bottom Navigation sử dụng Material Widget
 class VHVBottomNavScaffold extends StatefulWidget {
   final Widget child;
 
@@ -40,28 +39,27 @@ class _VHVBottomNavScaffoldState extends State<VHVBottomNavScaffold> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: widget.child,
-      // Sử dụng VHV Bottom Navigation Bar trực tiếp từ thư viện
-      bottomNavigationBar: VHVBottomNavigationBar(
+      bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onItemTapped,
         items: const [
-          VHVBottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
             activeIcon: Icon(Icons.home),
             label: 'Home',
           ),
-          VHVBottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.notifications_outlined),
             activeIcon: Icon(Icons.notifications),
             label: 'Notifications',
           ),
-          VHVBottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.settings_outlined),
             activeIcon: Icon(Icons.settings),
             label: 'Settings',
           ),
         ],
-        type: VHVBottomNavigationBarType.fixed,
+        type: BottomNavigationBarType.fixed,
         selectedFontSize: 12,
         unselectedFontSize: 12,
         elevation: 8,
